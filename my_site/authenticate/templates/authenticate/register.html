@@ -1,0 +1,115 @@
+{% extends 'authenticate/base.html' %}
+
+{% block content %}
+
+<h2 class="text-center">Register</h2>
+
+<div class="col-md-6 offset-md-3">
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="alert alert-danger alert-dismissable" role="alert" style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 15px; margin-bottom: 20px;">
+            <button class="close" data-dismiss="alert" style="border: none; background: none; font-size: 18px;">&times;</button>
+            {% for field in form %}
+                {% if field.errors %}
+                    {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {{ form.non_field_errors }}
+
+        <div style="margin-bottom: 15px;">
+            {{ form.username.label_tag }}<br>
+            {{ form.username }}
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            {{ form.email.label_tag }}<br>
+            {{ form.email }}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            {{ form.password1.label_tag }}<br>
+            {{ form.password1 }}
+            <!-- Password Strength Meter -->
+            <div id="password-strength-meter" style="margin-top: 10px;">
+                <div id="password-strength-bar" style="height: 5px; width: 0%; background-color: red; transition: width 0.3s ease;"></div>
+                <small id="password-strength-text" style="color: red;">Weak</small>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            {{ form.password2.label_tag }}<br>
+            {{ form.password2 }}
+        </div>
+
+        <input type="submit" value="Register" class="btn btn-primary">    
+    </form>
+
+    <div class="mt-3 text-center">
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+</div>
+
+<script>
+    // Function to check password strength
+    function checkPasswordStrength(password) {
+        let strength = 0;
+
+        // Check for length
+        if (password.length >= 8) strength += 1;
+        if (password.length >= 12) strength += 1;
+
+        // Check for lowercase and uppercase letters
+        if (/[a-z]/.test(password)) strength += 1;
+        if (/[A-Z]/.test(password)) strength += 1;
+
+        // Check for numbers
+        if (/\d/.test(password)) strength += 1;
+
+        // Check for special characters
+        if (/[^a-zA-Z\d]/.test(password)) strength += 1;
+
+        return strength;
+    }
+
+    // Update password strength meter
+    document.getElementById('id_password1').addEventListener('input', function() {
+        const password = this.value;
+        const strength = checkPasswordStrength(password);
+        const strengthBar = document.getElementById('password-strength-bar');
+        const strengthText = document.getElementById('password-strength-text');
+
+        let width = 0;
+        let color = 'red';
+        let text = 'Weak';
+
+        if (strength >= 4) {
+            width = 100;
+            color = 'green';
+            text = 'Very Strong';
+        } else if (strength >= 3) {
+            width = 75;
+            color = 'lightgreen';
+            text = 'Strong';
+        } else if (strength >= 2) {
+            width = 50;
+            color = 'orange';
+            text = 'Medium';
+        } else if (strength >= 1) {
+            width = 25;
+            color = 'red';
+            text = 'Weak';
+        }
+
+        strengthBar.style.width = width + '%';
+        strengthBar.style.backgroundColor = color;
+        strengthText.textContent = text;
+        strengthText.style.color = color;
+    });
+</script>
+
+{% endblock %}

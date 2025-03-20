@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>My Site</title>
+    <style>
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background-color: rgb(251, 252, 245);
+            color: rgb(0, 0, 0);
+        }
+
+        body.dark-mode {
+            background-color: rgb(69, 69, 69);
+            color: rgb(182, 50, 50);
+        }
+
+        .navbar {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        .theme-toggle {
+        position:fixed; /* Make it float */
+        top: 60px; /* Adjust position as needed */
+        right: 40px; /* Adjust position as needed */
+        cursor: pointer; /* Make it look clickable */
+        z-index: 1000; /* Ensure it appears above other content */
+        font-size: 2em; /* Adjust size as needed */
+        }
+body.dark-mode .theme-toggle {
+    color: rgb(0, 0, 0); /* Bright moon in dark mode */
+}
+
+body.light-mode .theme-toggle {
+    color: rgb(0, 0, 0); /* Dim moon in light mode */
+}
+        body {
+            padding-top: 56px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-style: italic;
+        }
+        .nav-link {
+            font-size: 1.1em;
+        }
+        .dropdown-menu {
+            background-color: #626262;
+            color: rgb(255, 255, 255);
+        }
+        .dropdown-item {
+            color: rgb(255, 255, 255);
+        }
+        .dropdown-item:hover {
+            background-color: #f1f8ff;
+        }
+        .container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
+body.dark-mode .container {
+    background: rgba(60, 60, 60, 0.9); /* Darker background in dark mode */
+    color: white;
+}
+
+.card {
+    margin-bottom: 20px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+body.dark-mode .card {
+    background-color: #333; /* Darker card background in dark mode */
+    color: white;
+}
+
+.card-title {
+    color: #007bff;
+}
+body.dark-mode .card-title {
+    color: #ffa500; /* Different color in dark mode */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+body.dark-mode .btn-primary {
+    background-color: #ffa500; /* Different button color in dark mode */
+    border-color: #ffa500;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+footer {
+   
+    color: rgb(153, 142, 142);
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="{% url 'home' %}">Password Strength Analysis</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'passgen' %}">Password Generator</a>
+                </li>
+                <li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'check_password_strength' %}">Strength Analysis</a>
+                    </li>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+                        <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <!-- Moon Icon for Dark Mode Toggle -->
+    <div class="theme-toggle" id="theme-toggle-button">
+        🌙Dark
+    </div>
+   
+
+    <div class="container mt-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissable" role="alert">
+            <button class="close" data-dismiss="alert">
+                <small><sup>x</sup></small>
+            </button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+
+    <!-- JavaScript to Toggle Dark Mode -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+
+            if (currentTheme === 'dark') {
+                themeToggleButton.innerText = '🌞'; // Sun icon in dark mode
+            } else {
+                themeToggleButton.innerText = '🌙'; // Moon icon in light mode
+            }
+        
+            document.body.classList.add(currentTheme + '-mode');
+        
+            themeToggleButton.addEventListener('click', function() {
+                const newTheme = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+                document.body.classList.remove('light-mode', 'dark-mode');
+                document.body.classList.add(newTheme + '-mode');
+                localStorage.setItem('theme', newTheme);
+                
+                // Toggle icon
+                if (newTheme === 'dark') {
+                    themeToggleButton.innerText = '🌞'; // Sun icon in dark mode
+                } else {
+                    themeToggleButton.innerText = '🌙'; // Moon icon in light mode
+                }
+            });
+        });
+    </script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

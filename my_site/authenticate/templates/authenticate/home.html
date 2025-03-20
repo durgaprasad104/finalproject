@@ -1,0 +1,49 @@
+{% extends 'authenticate/base.html' %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center"><b><i>Welcome to Your Dashboard</i></b></h1>
+    {% if user.is_authenticated %}
+        <div class="card my-4">
+            <div class="card-body">
+                <h2 class="card-title">User Information</h2>
+                <p class="card-text">Name: <b>{{ user.first_name }} {{ user.last_name }}</b></p>
+                <p class="card-text">Username: <b>{{ user.username }}</b></p>
+                <p class="card-text">Email: <b>{{ user.email }}</b></p>
+            </div>
+        </div>
+        <hr>
+        <div class="card my-4">
+            <div class="card-body">
+                <h2 class="card-title">About This Project</h2>
+                <p>Welcome to the Password Strength Analysis and Recommendation System Using Django</p>
+                <p>Our project is designed to help users create stronger, more secure passwords and provide personalized recommendations to enhance their online security experience. Below are the key features and benefits of our system:</p>
+
+                <h3>Password Strength Checker</h3>
+                <p><b>Password Strength Analysis:</b> Our system analyzes the strength of the passwords you create in real-time. It provides immediate feedback on the strength of your password, pointing out weaknesses and suggesting improvements. This feature ensures that your passwords are strong enough to protect your accounts from unauthorized access.</p><p><b>Real-Time Feedback:</b> As you type your password, the system displays a progress bar showing password strength (e.g., Weak, Medium, Strong, Very Strong) with color-coded feedback (e.g., red for Weak, yellow for Medium, green for Strong). Specific suggestions are provided to improve your password, such as "Add a number" or "Use a special character."</p><p><b>Show/Hide Password Button:</b> A toggle button allows you to show or hide your password while typing, ensuring accuracy and convenience.</p>
+
+                <h3>Password Generation</h3>
+                <p><b>Generate Strong Password:</b> Our system includes a button to generate a random, secure password. The generated password is displayed in a field, and you can copy it to your clipboard with a single click.</p><p><b>Secure Password Recommendations:</b> Based on the analysis, our system recommends strong and secure passwords. These recommendations are tailored to meet the best practices of password security, making it easier for you to create robust passwords without the guesswork.</p>
+                <h3>Password Composition Visualization</h3>          
+                <p><b>Bar Chart:</b> A visual representation of the password composition (e.g., lowercase letters, uppercase letters, numbers, special characters) is displayed using a bar chart. This helps you understand the balance of characters in your password.</p><p><b>Pie Chart:</b> An alternative visualization shows the percentage of each character type in your password, providing a clear and intuitive breakdown of its composition.</p>
+                <h3>User Authentication</h3>
+                <p><b>Login/Logout Button:</b> A button allows you to log in or log out of the system securely. The system ensures that only authenticated users can access its features.</p><p><b>User Profile:</b> Once logged in, the system displays your name and email, providing a personalized experience.</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert" style="padding: 20px;">
+            <h2>About This Website</h2>
+            <p>Welcome to the Password Strength Analysis and Recommendation System Using Django</p>
+            <p>Our project is designed to help users create stronger, more secure passwords and provide personalized recommendations to enhance their online security experience. Below are the key features and benefits of our system:</p>
+            
+            
+            <p class="mt-3">
+                <span style="font-size: 1.2em;">If you want to check password strength analysis, please <a href="{% url 'login' %}" class="btn btn-primary btn-sm">click here</a> to log in.</span>
+            </p>        
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
